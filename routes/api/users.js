@@ -9,7 +9,7 @@ const { check, validationResult } = require('express-validator')
 
 const User = require('../../models/User');
 
-
+//Register
 router.post('/',
     check('name', 'Name is required').notEmpty(),
     check('email', 'Please include a valid email').isEmail(),
@@ -56,9 +56,12 @@ router.post('/',
                 }
             }
 
+            var data = JSON.parse(JSON.stringify(user));
+            delete data.password;
+
             jwt.sign(payload, config.get('jwtSecret'), { expiresIn : 360000 }, (err, token)=>{
                 if(err) throw err;
-                res.json({token})
+                res.json({token, data})
             })
 
            // res.send('user registered')

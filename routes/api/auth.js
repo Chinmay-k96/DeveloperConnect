@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator')
 
+//get user
+
 router.get('/', auth, async (req, res)=> {
     try{   
         const user = await User.findById(req.user.id).select('-password')
@@ -17,6 +19,8 @@ router.get('/', auth, async (req, res)=> {
         res.status(500).send("Server error")
     }
 })
+
+//Login
 
 router.post('/',
     check('email', 'Please include a valid email').isEmail(),
@@ -36,7 +40,7 @@ router.post('/',
             let user = await User.findOne({email})
 
             if(!user){       
-               return res.status(400).json('Invalid credentials')
+               return res.status(400).json({message:'Invalid credentials'})
             }
 
             isMatch = await bcrypt.compare(password, user.password)
@@ -51,9 +55,12 @@ router.post('/',
                 }
             }
 
+            var data = JSON.parse(JSON.stringify(user));
+            delete data.password; // <-- here's the delete
+
             jwt.sign(payload, config.get('jwtSecret'), { expiresIn : 360000 }, (err, token)=>{
                 if(err) throw err;
-                res.json({token})
+                res.json({token, data})
             })
 
            // res.send('user registered')

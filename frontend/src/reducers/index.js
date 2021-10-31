@@ -5,11 +5,10 @@ import { combineReducers } from 'redux';
 // import post from './post';
 import authReducer from './auth';
 import profileReducer from './profile';
+import postReducer from './post';
 
 export default combineReducers({
     auth: authReducer,
-//   alert,
-//   auth,
+    post: postReducer,
     profile: profileReducer
-//   post
 });

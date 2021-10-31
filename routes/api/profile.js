@@ -289,7 +289,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 
       //const uri = `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
   
-      const gitHubResponse = await axios.get(uri);
+      const gitHubResponse = await axios.get(uri, headers);
       return res.json(gitHubResponse.data);
     } catch (err) {
       console.error(err.message);

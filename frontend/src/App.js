@@ -1,24 +1,24 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, lazy, Suspense } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Landing from './components/layout/Landing';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
 import Navbar from './components/layout/Navbar';
-import PrivateRoute from './components/routing/PrivateRoute';
-import Dashboard from './components/dashboard/Dashboard';
-import { Provider } from 'react-redux'
-import store from './store';
-import axios from 'axios';
 import Spinner from './components/layout/Spinner';
-import ProfileFrom from './components/profile-forms/ProfileFrom';
-import { Toaster } from 'react-hot-toast';
-import AddExperience from './components/profile-forms/AddExperience';
-import AddEducation from './components/profile-forms/AddEducation';
-import Profiles from './components/profiles/profiles';
-import Profile from './components/profile/profile';
-import Posts from './components/posts/Posts';
-import Post from './components/post/Post';
+import { Toaster } from 'react-hot-toast'
+import axios from 'axios';
+import { Provider } from 'react-redux';
+import store from './store';
+const Login = lazy(() => import( './components/auth/Login'))
+const Register = lazy(() => import( './components/auth/Register'))
+const PrivateRoute = lazy(() => import( './components/routing/PrivateRoute'))
+const Dashboard = lazy(() => import( './components/dashboard/Dashboard'))
+const AddExperience = lazy(() => import( './components/profile-forms/AddExperience'))
+const AddEducation = lazy(() => import( './components/profile-forms/AddEducation'))
+const Profiles = lazy(() => import( './components/profiles/profiles'))
+const ProfileForm = lazy(() => import( './components/profile-forms/ProfileForm'))
+const Profile = lazy(() => import( './components/profile/profile'))
+const Posts = lazy(() => import( './components/posts/Posts'))
+const Post = lazy(() => import( './components/post/Post'))
 
 
 const App = () => {
@@ -63,6 +63,7 @@ const App = () => {
       {/* <Router> */}
       <Fragment>
         <Navbar />
+        <Suspense fallback={<Spinner/>}>
         <Route exact path="/" component={Landing} />
         <section className="container">
           <Switch>
@@ -71,8 +72,8 @@ const App = () => {
             <Route exact path="/profiles" component={Profiles} />
             <Route exact path="/profile/:id" component={Profile} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/create-profile" component={ProfileFrom} />
-            <PrivateRoute exact path="/edit-profile" component={ProfileFrom} />
+            <PrivateRoute exact path="/create-profile" component={ProfileForm} />
+            <PrivateRoute exact path="/edit-profile" component={ProfileForm} />
             <PrivateRoute exact path="/add-experience" component={AddExperience} />
             <PrivateRoute exact path="/add-education" component={AddEducation} />
             <PrivateRoute exact path="/posts" component={Posts} />
@@ -80,6 +81,7 @@ const App = () => {
           </Switch>
         </section>
         {loading && <Spinner/>}
+        </Suspense>
         <Toaster position="top-right" reverseOrder={false}/>
       </Fragment>
       {/* </Router> */}
